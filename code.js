@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         v2exMarkdown
-// @version      0.67
+// @version      0.67.1
 // @description  为v2ex而生的markdown渲染
 // @author       hundan
 // @match        https://*.v2ex.com/t/*
@@ -95,8 +95,8 @@
     imgs.wrap('<a></a>');
     $.each(imgs, function (i, j) {
         $(j).css({'max-height':'25vh'});
-        let a_src = $(this).attr('src').replace(/^(?:https?:)?(?:\/\/)?(\w+.sinaimg.cn\/)/, "https://$1")
-        $(j).parent().attr('id', 'img' + i).attr('href', a_src)
+        // let a_src = $(this).attr('src').replace(/^(?:https?:)?(?:\/\/)?(\w+.sinaimg.cn\/)/, "https://$1")
+        $(j).parent().attr('id', 'img' + i).attr('href', $(this).attr('src'))
         console.log($(this).attr('src'))
         // 通过延迟解决与v2ex plus的冲突
         setTimeout(function(){
@@ -131,7 +131,8 @@
 <\/script>
 <script>
 $(parent.document).find("img").each(function(){
-    let img_src = $(this).attr("src").replace(/^(?:https?:)?(?:\\\/\\\/)?(\\w+.sinaimg.cn\\\/)/, "https:\/\/\$1")
+    //let img_src = $(this).attr("src").replace(/^(?:https?:)?(?:\\\/\\\/)?(\\w+.sinaimg.cn\\\/)/, "https:\/\/\$1")
+    let img_src = $(this).attr("src")
     let preload_img = \`<img src="\$\{img_src\}" />\`
     document.write(preload_img)
 })
