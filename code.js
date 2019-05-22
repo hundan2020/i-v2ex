@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         v2exMarkdown
-// @version      0.68.1
+// @version      0.68.2
 // @description  为v2ex而生的markdown渲染
 // @author       hundan
 // @match        https://*.v2ex.com/t/*
@@ -23,6 +23,7 @@
     // markdown处理
     var preFix = function(rawReply){
         var picRe = function(reply){
+            debugger;
             reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)\)|(https:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // sm.ms
             reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)\)|(https?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // 小z图床
             reply = reply.replace(/(?<!http:|https:)\/\/([a-z0-9]+\.sinaimg.cn\/(?:[a-z]+)\/[a-z0-9]+\.(?:jpg|png|gif|bmp))/ig, '![]( ' + encodeURI('https://$1') + ' )') // 新浪微博不规则图片链接
@@ -34,7 +35,7 @@
             return sReply
         }
         var fixedReply = rawReply
-        fixedReply = fixedReply.replace(/#(\d{1,3}\s)/ig, '&#x23;$1 ') // 避免楼层号加粗
+        fixedReply = fixedReply.replace(/#(\d+)/ig, '&#x23;$1') // 避免楼层号加粗
         fixedReply = fixedReply.replace(/(!\[(\S*?)\]\(\s+?)<a target="_blank" href="(\S+?)".*?><img src="(\S+?)" class="embedded_image".*?><\/a>\)+/ig, '![$2]($3)') // 正常显示的图片处理
         fixedReply = fixedReply.replace(/<img src="(\S+?)" class="embedded_image"[^>]*?>/ig, '![]($1)') // 正常显示的图片处理
         fixedReply = fixedReply.replace(/&lt;img src="(.+?)" \/&gt;/ig, '$1') // 不规则图片链接处理
