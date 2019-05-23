@@ -1,14 +1,14 @@
 // ==UserScript==
-// @name         v2exMarkdown
+// @name         i-v2ex
 // @version      0.68.2
-// @description  为v2ex而生的markdown渲染
+// @description  A better script for v2ex.com
 // @author       hundan
 // @match        https://*.v2ex.com/t/*
 // @require      https://cdn.staticfile.org/showdown/1.8.6/showdown.min.js
 // @require      https://cdn.staticfile.org/fancybox/3.3.5/jquery.fancybox.min.js
 // @require      https://cdn.staticfile.org/utf8/3.0.0/utf8.min.js
 // @grant        none
-// @namespace https://github.com/hundan2020/v2exMarkdown
+// @namespace    https://github.com/hundan2020/i-v2ex
 // ==/UserScript==
 
 (function () {
