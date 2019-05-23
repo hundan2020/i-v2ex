@@ -1,4 +1,4 @@
-# v2exMarkdown
+# i-v2ex
 
 A simple plugin for browsing v2ex.com, including markdown, picture viewer, base64 decoder, and more features.
 
