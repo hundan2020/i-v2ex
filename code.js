@@ -23,7 +23,6 @@
     // markdown处理
     var preFix = function(rawReply){
         var picRe = function(reply){
-            debugger;
             reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)\)|(https:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // sm.ms
             reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)\)|(https?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // 小z图床
             reply = reply.replace(/(?<!http:|https:)\/\/([a-z0-9]+\.sinaimg.cn\/(?:[a-z]+)\/[a-z0-9]+\.(?:jpg|png|gif|bmp))/ig, '![]( ' + encodeURI('https://$1') + ' )') // 新浪微博不规则图片链接
@@ -105,9 +104,7 @@
     imgs.wrap('<a></a>')
     $.each(imgs, function (i, j) {
         $(j).css({'max-height':'25vh'})
-        // let a_src = $(this).attr('src').replace(/^(?:https?:)?(?:\/\/)?(\w+.sinaimg.cn\/)/, "https://$1")
         $(j).parent().attr('id', 'img' + i).attr('href', $(this).attr('src'))
-        console.log($(this).attr('src'))
         // 通过延迟解决与v2ex plus的冲突
         setTimeout(function(){
             $("#img" + i).fancybox({
@@ -141,19 +138,18 @@
 <\/script>
 <script>
 $(parent.document).find("img").each(function(){
-    //let img_src = $(this).attr("src").replace(/^(?:https?:)?(?:\\\/\\\/)?(\\w+.sinaimg.cn\\\/)/, "https:\/\/\$1")
     let img_src = $(this).attr("src")
     let preload_img = \`<img src="\$\{img_src\}" />\`
     document.write(preload_img)
 })
 $('img').on('load', function () {
-	//console.log(this.src)
 	$(parent.document).find('img[src$="'+this.src+'"]').each(function () {
 		this.src = this.src
 	})
 })
 <\/script>
 `
+    // Base64 解码
     $('body').append('<iframe src="javascript:parent.refererBypass;" style="display: none;"></iframe>')
     let style = "ICAgICAgICAuYmFzZTY0OmhvdmVyIHsKICAgICAgICAgICAgYm9yZGVyLWNvbG9yOiAjYzBjNGNjOwogICAgICAgIH0KICAgICAgICAuYmFzZTY0OmZvY3VzIHsKICAgICAgICAgICAgb3V0bGluZTogbm9uZTsKICAgICAgICAgICAgYm9yZGVyLWNvbG9yOiAjNDA5ZWZmOwogICAgICAgIH0KICAgICAgICAuYmFzZTY0IHsKCQkJb3ZlcmZsb3c6IGhpZGRlbjsKICAgICAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogcmdiKDI1NSwgMjU1LCAyNTUpOwogICAgICAgICAgICBiYWNrZ3JvdW5kLWltYWdlOiBub25lOwogICAgICAgICAgICBib3JkZXItYm90dG9tLWNvbG9yOiByZ2IoMTkyLCAxOTYsIDIwNCk7CiAgICAgICAgICAgIGJvcmRlci1ib3R0b20tbGVmdC1yYWRpdXM6IDRweDsKICAgICAgICAgICAgYm9yZGVyLWJvdHRvbS1yaWdodC1yYWRpdXM6IDRweDsKICAgICAgICAgICAgYm9yZGVyLWJvdHRvbS1zdHlsZTogc29saWQ7CiAgICAgICAgICAgIGJvcmRlci1ib3R0b20td2lkdGg6IDFweDsKICAgICAgICAgICAgYm9yZGVyLWltYWdlLW91dHNldDogMHB4OwogICAgICAgICAgICBib3JkZXItaW1hZ2UtcmVwZWF0OiBzdHJldGNoOwogICAgICAgICAgICBib3JkZXItaW1hZ2Utc2xpY2U6IDEwMCU7CiAgICAgICAgICAgIGJvcmRlci1pbWFnZS1zb3VyY2U6IG5vbmU7CiAgICAgICAgICAgIGJvcmRlci1pbWFnZS13aWR0aDogMTsKICAgICAgICAgICAgYm9yZGVyLWxlZnQtY29sb3I6IHJnYigxOTIsIDE5NiwgMjA0KTsKICAgICAgICAgICAgYm9yZGVyLWxlZnQtc3R5bGU6IHNvbGlkOwogICAgICAgICAgICBib3JkZXItbGVmdC13aWR0aDogMXB4OwogICAgICAgICAgICBib3JkZXItcmlnaHQtY29sb3I6IHJnYigxOTIsIDE5NiwgMjA0KTsKICAgICAgICAgICAgYm9yZGVyLXJpZ2h0LXN0eWxlOiBzb2xpZDsKICAgICAgICAgICAgYm9yZGVyLXJpZ2h0LXdpZHRoOiAxcHg7CiAgICAgICAgICAgIGJvcmRlci10b3AtY29sb3I6IHJnYigxOTIsIDE5NiwgMjA0KTsKICAgICAgICAgICAgYm9yZGVyLXRvcC1sZWZ0LXJhZGl1czogNHB4OwogICAgICAgICAgICBib3JkZXItdG9wLXJpZ2h0LXJhZGl1czogNHB4OwogICAgICAgICAgICBib3JkZXItdG9wLXN0eWxlOiBzb2xpZDsKICAgICAgICAgICAgYm9yZGVyLXRvcC13aWR0aDogMXB4OwogICAgICAgICAgICBib3gtc2l6aW5nOiBib3JkZXItYm94OwogICAgICAgICAgICBjb2xvcjogcmdiKDk2LCA5OCwgMTAyKTsKICAgICAgICAgICAgY3Vyc29yOiB0ZXh0OwogICAgICAgICAgICBkaXNwbGF5OiBibG9jazsKICAgICAgICAgICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsKICAgICAgICAgICAgZm9udC1mYW1pbHk6ICJIZWx2ZXRpY2EgTmV1ZSIsIEhlbHZldGljYSwgIlBpbmdGYW5nIFNDIiwgIkhpcmFnaW5vIFNhbnMgR0IiLCAiTWljcm9zb2Z0IFlhSGVpIiwgU2ltU3VuLCBzYW5zLXNlcmlmOwogICAgICAgICAgICBmb250LXNpemU6IDE0cHg7CiAgICAgICAgICAgIGZvbnQtc3RyZXRjaDogMTAwJTsKICAgICAgICAgICAgZm9udC1zdHlsZTogbm9ybWFsOwogICAgICAgICAgICBmb250LXZhcmlhbnQtY2Fwczogbm9ybWFsOwogICAgICAgICAgICBmb250LXZhcmlhbnQtZWFzdC1hc2lhbjogbm9ybWFsOwogICAgICAgICAgICBmb250LXZhcmlhbnQtbGlnYXR1cmVzOiBub3JtYWw7CiAgICAgICAgICAgIGZvbnQtdmFyaWFudC1udW1lcmljOiBub3JtYWw7CiAgICAgICAgICAgIGxldHRlci1zcGFjaW5nOiBub3JtYWw7CiAgICAgICAgICAgIGxpbmUtaGVpZ2h0OiAyMXB4OwogICAgICAgICAgICBtYXJnaW4tYm90dG9tOiAwcHg7CiAgICAgICAgICAgIG1hcmdpbi1sZWZ0OiAwcHg7CiAgICAgICAgICAgIG1hcmdpbi1yaWdodDogMHB4OwogICAgICAgICAgICBtYXJnaW4tdG9wOiAwcHg7CiAgICAgICAgICAgIG1pbi1oZWlnaHQ6IDMzcHg7CiAgICAgICAgICAgIG92ZXJmbG93LXdyYXA6IGJyZWFrLXdvcmQ7CiAgICAgICAgICAgIHBhZGRpbmctYm90dG9tOiA1cHg7CiAgICAgICAgICAgIHBhZGRpbmctbGVmdDogMTVweDsKICAgICAgICAgICAgcGFkZGluZy1yaWdodDogMTVweDsKICAgICAgICAgICAgcGFkZGluZy10b3A6IDVweDsKICAgICAgICAgICAgcmVzaXplOiBub25lOwogICAgICAgICAgICB0ZXh0LWFsaWduOiBzdGFydDsKICAgICAgICAgICAgdGV4dC1pbmRlbnQ6IDBweDsKICAgICAgICAgICAgdGV4dC1yZW5kZXJpbmc6IGF1dG87CiAgICAgICAgICAgIHRleHQtc2hhZG93OiBub25lOwogICAgICAgICAgICB0ZXh0LXRyYW5zZm9ybTogbm9uZTsKICAgICAgICAgICAgdHJhbnNpdGlvbi1kZWxheTogMHM7CiAgICAgICAgICAgIHRyYW5zaXRpb24tZHVyYXRpb246IDAuMnM7CiAgICAgICAgICAgIHRyYW5zaXRpb24tcHJvcGVydHk6IGJvcmRlci1jb2xvcjsKICAgICAgICAgICAgdHJhbnNpdGlvbi10aW1pbmctZnVuY3Rpb246IGN1YmljLWJlemllcigwLjY0NSwgMC4wNDUsIDAuMzU1LCAxKTsKICAgICAgICAgICAgd2hpdGUtc3BhY2U6IHByZS13cmFwOwogICAgICAgICAgICB3b3JkLXNwYWNpbmc6IDBweDsKICAgICAgICAgICAgd3JpdGluZy1tb2RlOiBob3Jpem9udGFsLXRiOwogICAgICAgIH0K"
     $('head').append($('<style>' + atob(style) + '</style>'))
@@ -175,7 +171,6 @@ $('img').on('load', function () {
             textarea.css('display', 'none')
         }
     }
-    // Base64 解码
     let state = 0
     let just_moved = 0
     textarea[0].addEventListener('dblclick', function(){
