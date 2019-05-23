@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         i-v2ex
-// @version      0.68.2
-// @description  A better script for v2ex.com
+// @version      0.68.3
+// @description  为v2ex而生的markdown渲染
 // @author       hundan
 // @match        https://*.v2ex.com/t/*
 // @require      https://cdn.staticfile.org/showdown/1.8.6/showdown.min.js
@@ -161,6 +161,7 @@ $('img').on('load', function () {
                 textarea.val(utf8.decode(atob(text)))
                 textarea.css('background-color', '#fff')
                 textarea.css('display', '')
+                textarea[0].cols = textarea.val().length
                 textarea[0].style.height = ''
                 textarea[0].style.height = textarea[0].scrollHeight + 'px'
                 textarea.css('left', `${event.clientX + 10}px`)
