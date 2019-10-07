@@ -1,19 +1,19 @@
 // ==UserScript==
 // @name         i-v2ex
-// @version      0.68.3
+// @version      0.68.4
 // @description  A better script for v2ex.com
 // @author       hundan
 // @match        https://*.v2ex.com/t/*
 // @require      https://cdn.staticfile.org/showdown/1.8.6/showdown.min.js
 // @require      https://cdn.staticfile.org/fancybox/3.3.5/jquery.fancybox.min.js
 // @require      https://cdn.staticfile.org/utf8/3.0.0/utf8.min.js
+// @require      https://cdn.staticfile.org/highlight.js/9.15.10/highlight.min.js
 // @grant        none
 // @namespace    https://github.com/hundan2020/i-v2ex
-// @downloadURL none
 // ==/UserScript==
 
 (function () {
-    // jquery.js和highlight.js都由v2ex自身提供，不再向外部重复请求
+    // jquery.js由v2ex自身提供，不再向外部重复请求
     // 预处理以解决与 v2ex plus 的冲突
     $(".reply_content img").each(function(){
         var $this = $(this)
@@ -24,7 +24,7 @@
     // markdown处理
     var preFix = function(rawReply){
         var picRe = function(reply){
-            reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)\)|(https:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // sm.ms
+            reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)\s*\)|(https:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // sm.ms
             reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)\)|(https?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // 小z图床
             reply = reply.replace(/(?<!http:|https:)\/\/([a-z0-9]+\.sinaimg.cn\/(?:[a-z]+)\/[a-z0-9]+\.(?:jpg|png|gif|bmp))/ig, '![]( ' + encodeURI('https://$1') + ' )') // 新浪微博不规则图片链接
             return reply
@@ -44,7 +44,7 @@
         fixedReply = fixedReply.replace(/<a.*? href="(\S+?)".*?>(\S+?)<\/a>/ig, '$2') // 链接处理
         fixedReply = fixedReply.replace(/\[!\[(\S+?)\]\(\s*(\S+?)\)\]\(\s*\S+?\)/ig, '![$1]($2)') // 不规则图片链接处理，不规则案例见 `https://www.v2ex.com/t/463469#r_5792042`
         fixedReply = fixedReply.replace(/(\n)?<br *\/?>/ig, "\n") // 换行处理，避免多行代码无法正常工作
-        fixedReply = fixedReply.replace(/(https?:\/\/[\w\.\/\?\+%#\\]+)/ig, '$1 ') // 修正a标签链接，解决中文与链接混用导致的错误解析
+        fixedReply = fixedReply.replace(/(https?:\/\/[\w\.\/\?\+%#\\\-=]+)/ig, '$1 ') // 修正a标签链接，解决中文与链接混用导致的错误解析
         fixedReply = picRe(fixedReply)
         fixedReply = xssFilter(fixedReply)
         return fixedReply
@@ -86,6 +86,7 @@
             hljs.configure({useBR: true})
            $('div.reply_content code').each(function(i, block) {
                 hljs.highlightBlock(block)
+               $(this).css({'display':'inline'})
             })
         })
     }
