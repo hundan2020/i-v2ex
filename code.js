@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         i-v2ex
-// @version      0.68.4
+// @version      0.68.5
 // @description  A better script for v2ex.com
 // @author       hundan
 // @match        https://*.v2ex.com/t/*
@@ -13,7 +13,7 @@
 // ==/UserScript==
 
 (function () {
-    // jquery.js由v2ex自身提供，不再向外部重复请求
+    // jquery.js和highlight.js都由v2ex自身提供，不再向外部重复请求
     // 预处理以解决与 v2ex plus 的冲突
     $(".reply_content img").each(function(){
         var $this = $(this)
@@ -23,6 +23,7 @@
     })
     // markdown处理
     var preFix = function(rawReply){
+        //rawReply = 'content string for debug';
         var picRe = function(reply){
             reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)\s*\)|(https:\/\/i\.loli\.net\/\d{4}\/\d{2}\/\d{2}\/[a-z0-9]+.[a-z]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // sm.ms
             reply = reply.replace(/(?:!\[.*?\])?!\[.*?\]\(\s*((?:https?)?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)\)|(https?:\/\/imgurl\.org\/temp\/\d{4}\/[a-z0-9]+\.[a-z0-9]+)/ig, '![]( ' + encodeURI('$1$2') + ' )') // 小z图床
@@ -43,8 +44,9 @@
         fixedReply = fixedReply.replace(/<a target="_blank" href="(\/t\/\d+)"\s*?(?:rel="nofollow")?>\/t\/\d+<\/a>/ig, '[$1]($1)') // 论坛内链处理，考虑到在代码段中应当正常显示
         fixedReply = fixedReply.replace(/<a.*? href="(\S+?)".*?>(\S+?)<\/a>/ig, '$2') // 链接处理
         fixedReply = fixedReply.replace(/\[!\[(\S+?)\]\(\s*(\S+?)\)\]\(\s*\S+?\)/ig, '![$1]($2)') // 不规则图片链接处理，不规则案例见 `https://www.v2ex.com/t/463469#r_5792042`
+        fixedReply = fixedReply.replace(/!\[\]\(\s*!\[\]\((.+?)\)\s*\)/ig,' ![]($1) ') // 不规则图片链接处理，见 `https://www.v2ex.com/t/608455?p=1#r_8013651`
         fixedReply = fixedReply.replace(/(\n)?<br *\/?>/ig, "\n") // 换行处理，避免多行代码无法正常工作
-        fixedReply = fixedReply.replace(/(https?:\/\/[\w\.\/\?\+%#\\\-=]+)/ig, '$1 ') // 修正a标签链接，解决中文与链接混用导致的错误解析
+        fixedReply = fixedReply.replace(/(https?:\/\/[\x00-\xff]+)/ig, '$1 ') // 修正a标签链接，解决中文与链接混用导致的错误解析
         fixedReply = picRe(fixedReply)
         fixedReply = xssFilter(fixedReply)
         return fixedReply
