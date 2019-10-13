@@ -13,7 +13,7 @@
 // ==/UserScript==
 
 (function () {
-    // jquery.js和highlight.js都由v2ex自身提供，不再向外部重复请求
+    // jquery.js由v2ex自身提供，不再向外部重复请求
     // 预处理以解决与 v2ex plus 的冲突
     $(".reply_content img").each(function(){
         var $this = $(this)
@@ -216,7 +216,7 @@ $('img').on('load', function () {
     // 底注
     $(function(){
         setTimeout(function(){
-            console.clear()
+            //console.clear()
             console.log("\n\n\n Thanks for using my script~\n\n\n\n")
         }, 2000)
     })
